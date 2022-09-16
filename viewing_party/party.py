@@ -4,7 +4,6 @@ from lib2to3.pgen2.pgen import generate_grammar
 from shutil import move
 from turtle import title
 
-
 def create_movie(title, genre, rating):
     # testing git
     movie_dict ={}
@@ -82,12 +81,81 @@ def get_most_watched_genre(user_data):
         if value == most_watched_genre:
             return key
 
-
 # -----------------------------------------
 # ------------- WAVE 3 --------------------
 # -----------------------------------------
 
+
+def get_unique_watched(user_data):
+
+    # creating a list of friend's watched movie titles
+    friends_watched_movie_titles = []
+    for i in range(len(user_data["friends"])):
+        if "watched" in user_data["friends"][i].keys():
+            for j in range(len(user_data["friends"][i]["watched"])):
+                friends_watched_movie_titles.append(user_data["friends"][i]["watched"][j]["title"])
+
+    # creating a list of my watched movie titles
+    my_watched_movie_titles = []
+    for k in range(len(user_data["watched"])):
+        my_watched_movie_titles.append(user_data["watched"][k]["title"])
+    
+    if my_watched_movie_titles and friends_watched_movie_titles:
+        # create two sets of dictionaries of my and my friend's watched movies
+        my_list_of_movies = set(my_watched_movie_titles)
+        my_friends_list_of_movies = set(friends_watched_movie_titles)
+    else:
+        return []
+
+    my_unique_titles = my_list_of_movies - my_friends_list_of_movies
+
+    my_unique_movies_list = []
+    for title in my_unique_titles:
         
+        for l in range(len(user_data["watched"])):
+            if user_data["watched"][l]["title"] == title:
+                genre = user_data["watched"][l]["genre"]
+                rating = user_data["watched"][l]["rating"]
+        my_unique_movies_list.append({"title": title, "genre": genre, "rating": rating})
+    
+    return my_unique_movies_list
+
+
+def get_friends_unique_watched(user_data):
+
+    # creating a list of friend's watched movie titles
+    friends_watched_movie_titles = []
+    for i in range(len(user_data["friends"])):
+        if "watched" in user_data["friends"][i].keys():
+            for j in range(len(user_data["friends"][i]["watched"])):
+                friends_watched_movie_titles.append(user_data["friends"][i]["watched"][j]["title"])
+
+    # creating a list of my watched movie titles
+    my_watched_movie_titles = []
+    for k in range(len(user_data["watched"])):
+        my_watched_movie_titles.append(user_data["watched"][k]["title"])
+    
+    if my_watched_movie_titles and friends_watched_movie_titles:
+        # create two sets of dictionaries of my and my friend's watched movies
+        my_list_of_movies = set(my_watched_movie_titles)
+        my_friends_list_of_movies = set(friends_watched_movie_titles)
+    else:
+        return []
+
+    my_friends_unique_titles = my_friends_list_of_movies - my_list_of_movies
+
+    my_friends_unique_movies_list = []
+    for title in my_friends_unique_titles:
+        for m in range(len(user_data["friends"])):
+            if "watched" in user_data["friends"][m].keys():
+                for n in range(len(user_data["friends"][m]["watched"])):
+                    if user_data["friends"][m]["watched"][n]["title"] == title:
+                        genre = user_data["friends"][m]["watched"][n]["genre"]
+                        rating = user_data["friends"][m]["watched"][n]["rating"]
+        my_friends_unique_movies_list.append({"title": title, "genre": genre, "rating": rating})
+    
+    return my_friends_unique_movies_list
+
 # -----------------------------------------
 # ------------- WAVE 4 --------------------
 # -----------------------------------------

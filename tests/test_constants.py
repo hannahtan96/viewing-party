@@ -150,7 +150,7 @@ USER_DATA_4 = {
                 INTRIGUE_1b,
                 INTRIGUE_3b,
             ]
-        }  
+        }
     ]
 }
 
