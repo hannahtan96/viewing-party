@@ -18,38 +18,20 @@ def create_movie(title, genre, rating):
     return movie_dict
 
 def add_to_watched(user_data, movie):
-    watched_movie_dict = {
-        "title": movie["title"],
-        "genre": movie["genre"],
-        "rating": movie["rating"]
-    }
-
-    user_data["watched"].append(watched_movie_dict)
+    user_data["watched"].append(movie)
 
     return user_data
 
 def add_to_watchlist(user_data, movie):
-    to_watch_movie_dict = {
-        "title": movie["title"],
-        "genre": movie["genre"],
-        "rating": movie["rating"]
-    }
-
-    user_data["watchlist"].append(to_watch_movie_dict)
+    user_data["watchlist"].append(movie)
 
     return user_data
 
 def watch_movie(user_data, title):
-    # create a dictionary where key = title, value = index
-    watchlist_titles_dict = {}
-
-    # gather all of the watchlist titles
-    for i in range(len(user_data["watchlist"])):
-        watchlist_titles_dict[user_data["watchlist"][i]["title"]] = i
-
-    if title in watchlist_titles_dict.keys():
-        user_data["watchlist"].pop(watchlist_titles_dict[title])
-        user_data["watched"].append(watchlist_titles_dict[title])
+    for movie in user_data["watchlist"]:
+        if movie["title"] == title:
+            user_data["watchlist"].remove(movie)
+            user_data["watched"].append(movie)
 
     return user_data
 
@@ -85,29 +67,34 @@ def get_most_watched_genre(user_data):
 # ------------- WAVE 3 --------------------
 # -----------------------------------------
 
+# create a helper function to return two lists: my_list_of_movies and my_friends_list_movies
+def get_my_and_friends_watched_movie_titles(user_data):
 
-def get_unique_watched(user_data):
+    # create a list of my watched movie titles
+    my_watched_movie_titles = []
+    for k in range(len(user_data["watched"])):
+        my_watched_movie_titles.append(user_data["watched"][k]["title"])
 
-    # creating a list of friend's watched movie titles
+    # create a list of friend's watched movie titles
     friends_watched_movie_titles = []
     for i in range(len(user_data["friends"])):
         if "watched" in user_data["friends"][i].keys():
             for j in range(len(user_data["friends"][i]["watched"])):
                 friends_watched_movie_titles.append(user_data["friends"][i]["watched"][j]["title"])
 
-    # creating a list of my watched movie titles
-    my_watched_movie_titles = []
-    for k in range(len(user_data["watched"])):
-        my_watched_movie_titles.append(user_data["watched"][k]["title"])
-    
-    if my_watched_movie_titles and friends_watched_movie_titles:
-        # create two sets of dictionaries of my and my friend's watched movies
-        my_list_of_movies = set(my_watched_movie_titles)
-        my_friends_list_of_movies = set(friends_watched_movie_titles)
-    else:
-        return []
+    # returns two sets in a list
+    return [set(my_watched_movie_titles), set(friends_watched_movie_titles)]
 
-    my_unique_titles = my_list_of_movies - my_friends_list_of_movies
+
+def get_unique_watched(user_data):
+
+    return_list = get_my_and_friends_watched_movie_titles(user_data)
+    my_list_of_movies = return_list[0]
+    friends_list_of_movies = return_list[1]
+
+    if my_list_of_movies and friends_list_of_movies:
+        my_unique_titles = my_list_of_movies - friends_list_of_movies
+    else: return []
 
     my_unique_movies_list = []
     for title in my_unique_titles:
@@ -123,26 +110,13 @@ def get_unique_watched(user_data):
 
 def get_friends_unique_watched(user_data):
 
-    # creating a list of friend's watched movie titles
-    friends_watched_movie_titles = []
-    for i in range(len(user_data["friends"])):
-        if "watched" in user_data["friends"][i].keys():
-            for j in range(len(user_data["friends"][i]["watched"])):
-                friends_watched_movie_titles.append(user_data["friends"][i]["watched"][j]["title"])
+    return_list = get_my_and_friends_watched_movie_titles(user_data)
+    my_list_of_movies = return_list[0]
+    friends_list_of_movies = return_list[1]
 
-    # creating a list of my watched movie titles
-    my_watched_movie_titles = []
-    for k in range(len(user_data["watched"])):
-        my_watched_movie_titles.append(user_data["watched"][k]["title"])
-    
-    if my_watched_movie_titles and friends_watched_movie_titles:
-        # create two sets of dictionaries of my and my friend's watched movies
-        my_list_of_movies = set(my_watched_movie_titles)
-        my_friends_list_of_movies = set(friends_watched_movie_titles)
-    else:
-        return []
-
-    my_friends_unique_titles = my_friends_list_of_movies - my_list_of_movies
+    if my_list_of_movies and friends_list_of_movies:
+        my_friends_unique_titles = friends_list_of_movies - my_list_of_movies
+    else: return []
 
     my_friends_unique_movies_list = []
     for title in my_friends_unique_titles:
@@ -159,8 +133,9 @@ def get_friends_unique_watched(user_data):
 # -----------------------------------------
 # ------------- WAVE 4 --------------------
 # -----------------------------------------
+# def get_available_recs(user_data):
+
 
 # -----------------------------------------
 # ------------- WAVE 5 --------------------
 # -----------------------------------------
-
