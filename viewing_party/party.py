@@ -41,8 +41,8 @@ def watch_movie(user_data, title):
 def get_watched_avg_rating(user_data):
     sum_of_ratings = 0
     if user_data["watched"]:
-        for i in range(len(user_data["watched"])):
-            sum_of_ratings += user_data["watched"][i]["rating"]
+        for movie in user_data["watched"]:
+            sum_of_ratings += movie["rating"]
     else: return 0
 
     average_of_ratings = sum_of_ratings / len(user_data["watched"])
@@ -52,10 +52,10 @@ def get_watched_avg_rating(user_data):
 def get_most_watched_genre(user_data):
     genre_dict = {}
     if user_data["watched"]:
-        for i in range(len(user_data["watched"])):
-            if user_data["watched"][i]["genre"] in genre_dict.keys():
-                genre_dict[user_data["watched"][i]["genre"]] += 1
-            else: genre_dict[user_data["watched"][i]["genre"]] = 1
+        for movie in user_data["watched"]:
+            if movie["genre"] in genre_dict:
+                genre_dict[movie["genre"]] += 1
+            else: genre_dict[movie["genre"]] = 1
     else: return None
 
     most_watched_genre = max(genre_dict.values())
@@ -79,44 +79,38 @@ def get_my_and_friends_movies(user_data):
     friends_watched_movies = []
     for elem in user_data["friends"]:
         if "watched" in elem:
-            friends_watched_movies = friends_watched_movies + elem["watched"]
+            for movie in elem["watched"]:
+                # remove potential duplicates among movies watched by friends
+                if movie not in friends_watched_movies:
+                    friends_watched_movies.append(movie)
 
-    # remove potential duplicates in friends' list
-    friends_watched_movies_no_dups = []
-    for movie in friends_watched_movies:
-        if movie not in friends_watched_movies_no_dups:
-            friends_watched_movies_no_dups.append(movie)
+    # returns two elements: my_watched_movies and friends_watched_movies
+    return my_watched_movies, friends_watched_movies
 
-    # returns a list with two elements: my_watched_movies and friends_watched_movies
-    return [my_watched_movies, friends_watched_movies_no_dups]
+# create a helper function to return a list of all movies in the first list that is not in the second list
+def find_unique_movies(first_list, second_list):
+    
+    return_list = []
+    if first_list:
+        for movie in first_list:
+            if movie not in second_list:
+                return_list.append(movie)
+
+    return return_list
 
 
 def get_unique_watched(user_data):
 
-    return_list = get_my_and_friends_movies(user_data)
-    my_list_of_movies = return_list[0]
-    friends_list_of_movies = return_list[1]
-
-    my_unique_movies = []
-    if my_list_of_movies:
-        for my_movie in my_list_of_movies:
-            if my_movie not in friends_list_of_movies:
-                my_unique_movies.append(my_movie)
+    my_list_of_movies, friends_list_of_movies = get_my_and_friends_movies(user_data)
+    my_unique_movies = find_unique_movies(my_list_of_movies, friends_list_of_movies)
     
     return my_unique_movies
 
 def get_friends_unique_watched(user_data):
 
-    return_list = get_my_and_friends_movies(user_data)
-    my_list_of_movies = return_list[0]
-    friends_list_of_movies = return_list[1]
+    my_list_of_movies, friends_list_of_movies = get_my_and_friends_movies(user_data)
+    friends_unique_movies = find_unique_movies(friends_list_of_movies, my_list_of_movies)
 
-    friends_unique_movies = []
-    if friends_list_of_movies:
-        for friends_movie in friends_list_of_movies:
-            if friends_movie not in my_list_of_movies:
-                friends_unique_movies.append(friends_movie)
-    
     return friends_unique_movies
 
 # -----------------------------------------
@@ -134,7 +128,6 @@ def get_available_recs(user_data):
 
     return available_recs
 
-
 # -----------------------------------------
 # ------------- WAVE 5 --------------------
 # -----------------------------------------
@@ -143,7 +136,7 @@ def get_new_rec_by_genre(user_data):
 
     # retrieve list of movies that the user has not seen, but at least one friend has seen
     friends_unique_list = get_friends_unique_watched(user_data)
-
+    # retrieve genre with highest frequency
     most_popular_genre = get_most_watched_genre(user_data)
 
     available_recs_by_genre = []
