@@ -53,7 +53,49 @@ def test_new_genre_rec_from_empty_friends():
         ]
     }
 
+    COMEDY_1 = {
+        "title": "Bridesmaids",
+        "genre": "Comedy",
+        "rating": 4.9
+    }
+    HORROR_2 = {
+        "title": "A Quiet Place",
+        "genre": "Horror",
+        "rating": 5.0
+    }
+    hannahs_data = {
+        "watchlist": [],
+        "watched": [{
+            "title": MOVIE_TITLE_1, # refers to HORROR_1
+            "genre": GENRE_1,
+            "rating": RATING_1
+        }, COMEDY_1, HORROR_2],
+        "friends": [
+            {
+                "watched": []
+            },
+            {
+                "watched": []
+            },
+            {
+                "watched": []
+            },
+            {
+                "watched": []
+            }
+        ]
+    }
+
+    # Act
+    recommendations = get_new_rec_by_genre(sonyas_data)
+    hannahs_friends_recommendations = get_new_rec_by_genre(hannahs_data)
+
+    # Assert
+    assert len(recommendations) == 0
+    assert len(hannahs_friends_recommendations) == 0
+
     # raise Exception("Test needs to be completed.")
+
     # *********************************************************************
     # ****** Complete the Act and Assert Portions of theis tests **********
     # *********************************************************************

@@ -111,15 +111,43 @@ def test_moves_movie_from_watchlist_to_empty_watched():
         }],
         "watched": []
     }
+    hannahs_data = {
+        "watchlist": [{
+            "title": MOVIE_TITLE_1,
+            "genre": GENRE_1,
+            "rating": RATING_1
+        }, {
+            "title": "Bridesmaids",
+            "genre": "Comedy",
+            "rating": 4.9
+        }],
+        "watched": []
+    }
+    christians_data = {
+        "watchlist": [{
+            "title": MOVIE_TITLE_1,
+            "genre": GENRE_1,
+            "rating": RATING_1
+        }],
+        "watched": [{
+            "title": "Bridesmaids",
+            "genre": "Comedy",
+            "rating": 4.9
+        }]
+    }
 
     # Act
     updated_data = watch_movie(janes_data, MOVIE_TITLE_1)
+    hannahs_updated_data = watch_movie(hannahs_data, "Bridesmaids")
+    christians_updated_data = watch_movie(christians_data, "A Quiet Place")
 
     # Assert
     assert len(updated_data["watchlist"]) == 0
     assert len(updated_data["watched"]) == 1
     
     # raise Exception("Test needs to be completed.")
+    assert len(hannahs_updated_data["watched"]) == 1
+    assert len(christians_updated_data["watched"]) == 1
     # *******************************************************************************************
     # ****** Add assertions here to test that the correct movie was added to "watched" **********
     # *******************************************************************************************
@@ -128,6 +156,21 @@ def test_moves_movie_from_watchlist_to_empty_watched():
 def test_moves_movie_from_watchlist_to_watched():
     # Arrange
     movie_to_watch = HORROR_1
+
+    COMEDY_1 = {
+        "title": "Bridesmaids",
+        "genre": "Comedy",
+        "rating": 4.9
+    }
+    movie2_to_watch = COMEDY_1
+
+    HORROR_2 = {
+        "title": "A Quiet Place",
+        "genre": "Horror",
+        "rating": 5.0
+    }
+    movie3_to_watch = HORROR_2
+    
     janes_data = {
         "watchlist": [
             FANTASY_1,
@@ -136,17 +179,50 @@ def test_moves_movie_from_watchlist_to_watched():
         "watched": [FANTASY_2]
     }
 
+    hannahs_data = {
+        "watchlist": [{
+            "title": MOVIE_TITLE_1,
+            "genre": GENRE_1,
+            "rating": RATING_1
+        }, {
+            "title": "Bridesmaids",
+            "genre": "Comedy",
+            "rating": 4.9
+        }],
+        "watched": []
+    }
+    christians_data = {
+        "watchlist": [{
+            "title": MOVIE_TITLE_1,
+            "genre": GENRE_1,
+            "rating": RATING_1
+        }],
+        "watched": [{
+            "title": "Bridesmaids",
+            "genre": "Comedy",
+            "rating": 4.9
+        }]
+    }
+
     # Act
     updated_data = watch_movie(janes_data, movie_to_watch["title"])
+    hannahs_updated_data = watch_movie(hannahs_data, movie2_to_watch["title"])
+    christians_updated_data = watch_movie(christians_data,movie3_to_watch["title"])
 
     # Assert
     assert len(updated_data["watchlist"]) == 1
     assert len(updated_data["watched"]) == 2
     
     # raise Exception("Test needs to be completed.")
+    assert len(hannahs_updated_data["watchlist"]) == 1
+    assert len(hannahs_updated_data["watched"]) == 1
+    assert len(christians_updated_data["watchlist"]) == 1
+    assert len(christians_updated_data["watched"]) == 1
+
     # *******************************************************************************************
     # ****** Add assertions here to test that the correct movie was added to "watched" **********
     # *******************************************************************************************
+    
 
 # @pytest.mark.skip()
 def test_does_nothing_if_movie_not_in_watchlist():
