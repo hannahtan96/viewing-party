@@ -92,12 +92,11 @@ def test_new_genre_rec_from_empty_friends():
 
     # Assert
     assert len(recommendations) == 0
-    assert len(hannahs_friends_recommendations) == 0
-
+    
     # raise Exception("Test needs to be completed.")
-
     # *********************************************************************
     # ****** Complete the Act and Assert Portions of theis tests **********
+    assert len(hannahs_friends_recommendations) == 0
     # *********************************************************************
 
 # @pytest.mark.skip()
