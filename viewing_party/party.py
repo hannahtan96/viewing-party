@@ -61,13 +61,10 @@ def get_most_watched_genre(user_data):
 # -----------------------------------------
 # ------------- WAVE 3 --------------------
 # -----------------------------------------
-
 # create a helper function to return two lists: my_list_of_movies and my_friends_list_movies
 def get_my_and_friends_movies(user_data):
     # create a list of my watched movies
-    my_watched_movies = []
-    for movie in user_data["watched"]:
-        my_watched_movies.append(movie)
+    my_watched_movies = [movie for movie in user_data["watched"]]
 
     # create a list of friend's watched movies
     friends_watched_movies = []
@@ -84,13 +81,10 @@ def get_my_and_friends_movies(user_data):
 
 # create a helper function to return a list of all movies in the first list that is not in the second list
 def find_unique_movies_in_first_not_second(first_list, second_list):
-    return_list = []
     if first_list:
-        for movie in first_list:
-            if movie not in second_list:
-                return_list.append(movie)
-
-    return return_list
+        return [movie for movie in first_list if movie not in second_list]
+    else:
+        return []
 
 
 def get_unique_watched(user_data):
@@ -112,13 +106,8 @@ def get_friends_unique_watched(user_data):
 def get_available_recs(user_data):
     # retrieve list of movies that the user has not seen, but at least one friend has seen
     friends_unique_list = get_friends_unique_watched(user_data)
-
-    available_recs = []
-    for movie in friends_unique_list:
-        if movie["host"] in user_data["subscriptions"]:
-            available_recs.append(movie)
-
-    return available_recs
+    
+    return [movie for movie in friends_unique_list if movie["host"] in user_data["subscriptions"]]
 
 # -----------------------------------------
 # ------------- WAVE 5 --------------------
@@ -130,23 +119,11 @@ def get_new_rec_by_genre(user_data):
     # retrieve genre with highest frequency
     most_popular_genre = get_most_watched_genre(user_data)
 
-    available_recs_by_genre = []
-    for movie in friends_unique_list:
-        if movie["genre"] == most_popular_genre:
-            available_recs_by_genre.append(movie)
-
-    return available_recs_by_genre
+    return [movie for movie in friends_unique_list if movie["genre"] == most_popular_genre]
 
 
 def get_rec_from_favorites(user_data):
-
     # retrieve list of movies that the user has seen, but no friend have seen
     my_unique_list = get_unique_watched(user_data)
 
-    available_recs_from_favs = []
-    for movie in my_unique_list:
-        if movie in user_data["favorites"]:
-            available_recs_from_favs.append(movie)
-
-    return available_recs_from_favs
-
+    return [movie for movie in my_unique_list if movie in user_data["favorites"]]
