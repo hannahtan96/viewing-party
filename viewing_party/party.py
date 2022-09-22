@@ -1,8 +1,8 @@
 # ------------- WAVE 1 --------------------
 
-from lib2to3.pgen2.pgen import generate_grammar
-from shutil import move
-from turtle import title
+# from lib2to3.pgen2.pgen import generate_grammar
+# from shutil import move
+# from turtle import title
 from collections import Counter
 
 def create_movie(title, genre, rating):
