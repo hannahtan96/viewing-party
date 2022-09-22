@@ -18,13 +18,11 @@ def create_movie(title, genre, rating):
 
 def add_to_watched(user_data, movie):
     user_data["watched"].append(movie)
-
     return user_data
 
 
 def add_to_watchlist(user_data, movie):
     user_data["watchlist"].append(movie)
-
     return user_data
 
 def watch_movie(user_data, title):
@@ -52,12 +50,9 @@ def get_watched_avg_rating(user_data):
 def get_most_watched_genre(user_data):
     # create a list of all genres to pass into Counter
     if user_data["watched"]:
-        genre_list = [movie["genre"] for movie in user_data["watched"]]
+        genre_dict = Counter([movie["genre"] for movie in user_data["watched"]])
+        return genre_dict.most_common(1)[0][0]
     else: return None
-    
-    genre_dict = Counter(genre_list)
-    return genre_dict.most_common(1)[0][0]
-
 # -----------------------------------------
 # ------------- WAVE 3 --------------------
 # -----------------------------------------
@@ -81,10 +76,7 @@ def get_my_and_friends_movies(user_data):
 
 # create a helper function to return a list of all movies in the first list that is not in the second list
 def find_unique_movies_in_first_not_second(first_list, second_list):
-    if first_list:
-        return [movie for movie in first_list if movie not in second_list]
-    else:
-        return []
+    return [movie for movie in first_list if movie not in second_list]
 
 
 def get_unique_watched(user_data):
