@@ -37,13 +37,13 @@ def watch_movie(user_data, title):
 # ------------- WAVE 2 --------------------
 # -----------------------------------------
 def get_watched_avg_rating(user_data):
-    sum_of_ratings = 0
+    
     if user_data["watched"]:
-        for movie in user_data["watched"]:
-            sum_of_ratings += movie["rating"]
-    else: return 0
+        ratings = [movie["rating"] for movie in user_data["watched"]]
+    else: 
+        return 0
 
-    average_of_ratings = sum_of_ratings / len(user_data["watched"])
+    average_of_ratings = sum(ratings) / len(ratings)
     return average_of_ratings
 
 
@@ -52,7 +52,8 @@ def get_most_watched_genre(user_data):
     if user_data["watched"]:
         genre_dict = Counter([movie["genre"] for movie in user_data["watched"]])
         return genre_dict.most_common(1)[0][0]
-    else: return None
+    else: 
+        return None
 # -----------------------------------------
 # ------------- WAVE 3 --------------------
 # -----------------------------------------
